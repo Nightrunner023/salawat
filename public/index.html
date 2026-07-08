@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ṣalawāt · compteur hebdomadaire</title>
+  <meta name="description" content="Un compteur hebdomadaire de ṣalawāt, simple et privé. Vos comptes sont sauvegardés avec votre compte Google et vous suivent d'un appareil à l'autre." />
+  <meta name="theme-color" content="#0a1c15" />
+  <meta name="robots" content="noindex" />
+
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Manrope:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/style.css" />
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+  <!-- Écran de connexion -->
+  <main class="page login" id="loginView" hidden>
+    <div class="login__box">
+      <h1 class="title">Ṣalawāt</h1>
+      <p class="salawat-formula">Allāhumma ṣalli ʿalā Sayyidinā Muḥammad ﷺ</p>
+      <p class="login__lede">
+        Un compteur hebdomadaire de ṣalawāt, simple et privé. Connectez-vous
+        pour que vos comptes soient sauvegardés et vous suivent d'un appareil
+        à l'autre.
+      </p>
+      <div class="login__btn" id="googleBtn"></div>
+      <p class="login__note" id="loginNote"></p>
+    </div>
+  </main>
+
+  <!-- Application -->
+  <main class="page app" id="appView" hidden>
+    <header class="head">
+      <div>
+        <h1 class="title title--small">Ṣalawāt</h1>
+        <p class="head__range" id="weekRange">…</p>
+      </div>
+      <button class="linkbtn" id="btnLogout" type="button">Se déconnecter</button>
+    </header>
+
+    <!-- Total de la semaine -->
+    <section class="total" aria-live="polite">
+      <p class="total__label">Cette semaine</p>
+      <p class="total__value" id="weekTotal">0</p>
+    </section>
+
+    <!-- Les 7 jours -->
+    <section class="days" id="days" aria-label="Jours de la semaine"></section>
+
+    <!-- Saisie -->
+    <section class="entry">
+      <form class="entry__form" id="entryForm">
+        <input class="entry__input" id="entryAmount" type="number" inputmode="numeric"
+               min="1" step="1" placeholder="Nombre de ṣalawāt" autocomplete="off" />
+        <button class="btn btn--primary" type="submit">Ajouter à aujourd'hui</button>
+      </form>
+      <button class="linkbtn linkbtn--muted" id="btnUndo" type="button">Annuler la dernière saisie du jour</button>
+      <p class="entry__msg" id="entryMsg" aria-live="polite"></p>
+    </section>
+
+    <!-- Clôture -->
+    <section class="close">
+      <button class="btn" id="btnClose" type="button">
+        Clôturer la semaine
+        <span class="btn__sub">enregistre le total puis remet à zéro</span>
+      </button>
+    </section>
+
+    <!-- Historique -->
+    <section class="history">
+      <h2 class="section-title">Historique</h2>
+      <p class="history__alltime">Total depuis le début : <strong id="allTime">0</strong></p>
+      <ul class="history__list" id="historyList"></ul>
+      <p class="history__empty" id="historyEmpty" hidden>Les semaines clôturées apparaîtront ici.</p>
+    </section>
+
+    <!-- Réglage -->
+    <section class="settings">
+      <label class="settings__row">
+        <span>Ma semaine commence le</span>
+        <select id="weekStartSelect">
+          <option value="5">vendredi</option>
+          <option value="6">samedi</option>
+          <option value="0">dimanche</option>
+          <option value="1">lundi</option>
+          <option value="2">mardi</option>
+          <option value="3">mercredi</option>
+          <option value="4">jeudi</option>
+        </select>
+      </label>
+    </section>
+
+    <footer class="foot">
+      <p class="salawat-formula salawat-formula--foot">Allāhumma ṣalli ʿalā Sayyidinā Muḥammad wa ʿalā ālihi wa ṣaḥbihi wa sallim</p>
+    </footer>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>
