@@ -40,6 +40,7 @@
     <header class="head">
       <div>
         <h1 class="title title--small">Ṣalawāt</h1>
+        <p class="head__user" id="userName"></p>
         <p class="head__range" id="weekRange">…</p>
       </div>
       <button class="linkbtn" id="btnLogout" type="button">Se déconnecter</button>
@@ -59,9 +60,9 @@
       <form class="entry__form" id="entryForm">
         <input class="entry__input" id="entryAmount" type="number" inputmode="numeric"
                min="1" step="1" placeholder="Nombre de ṣalawāt" autocomplete="off" />
-        <button class="btn btn--primary" type="submit">Ajouter à aujourd'hui</button>
+        <button class="btn btn--primary" type="submit" id="entrySubmit">Ajouter à aujourd'hui</button>
       </form>
-      <button class="linkbtn linkbtn--muted" id="btnUndo" type="button">Annuler la dernière saisie du jour</button>
+      <button class="linkbtn linkbtn--muted" id="btnUndo" type="button">Annuler la dernière saisie du jour sélectionné</button>
       <p class="entry__msg" id="entryMsg" aria-live="polite"></p>
     </section>
 

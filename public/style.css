@@ -15,6 +15,7 @@
 
 * { box-sizing: border-box; }
 html, body { margin: 0; }
+[hidden] { display: none !important; }
 
 body {
   min-height: 100dvh;
@@ -244,3 +245,20 @@ body {
 @media (max-width: 420px) {
   .entry__form { flex-direction: column; }
 }
+
+/* salutation sous le titre */
+.head__user { margin: 4px 0 0; font-size: 13.5px; color: var(--gold-soft); }
+
+/* les cases des jours sont des boutons cliquables */
+.day {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease, transform 0.1s ease;
+}
+.day:active { transform: scale(0.97); }
+.day--selected {
+  border-color: var(--gold-soft);
+  background: rgba(226, 192, 96, 0.12);
+}
+.day--selected .day__name { color: var(--gold-soft); }

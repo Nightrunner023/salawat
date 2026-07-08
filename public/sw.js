@@ -1,5 +1,5 @@
 /* Service worker — Ṣalawāt. Ne met JAMAIS l'API en cache (données personnelles). */
-const CACHE = 'salawat-v1';
+const CACHE = 'salawat-v2';
 const ASSETS = ['/', '/style.css', '/app.js', '/manifest.webmanifest', '/icon-192.png'];
 
 self.addEventListener('install', (e) => {

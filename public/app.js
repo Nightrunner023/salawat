@@ -13,6 +13,7 @@ function localToday() {
 
 let CLIENT_ID = '';
 let STATE = null;
+let SELECTED_DATE = null; // jour sélectionné pour la saisie (défaut : aujourd'hui)
 
 // --- Appels API ---------------------------------------------------------------
 async function api(path, options = {}) {
@@ -84,21 +85,36 @@ function render() {
   $('appView').hidden = false;
 
   const w = STATE.week;
+  $('userName').textContent = STATE.user.name ? 'As-salāmu ʿalaykum, ' + STATE.user.name : '';
   $('weekRange').textContent =
     'Semaine du ' + dayMonth.format(asDate(w.start)) + ' au ' + dayMonth.format(asDate(w.end));
   $('weekTotal').textContent = nf.format(w.total);
 
-  // Jours
+  // Jour sélectionné : aujourd'hui par défaut, ou la sélection précédente si
+  // elle appartient toujours à la semaine affichée.
   const today = localToday();
+  const inWeek = w.days.some((d) => d.date === SELECTED_DATE);
+  if (!SELECTED_DATE || !inWeek) SELECTED_DATE = today;
+
+  // Jours (cliquables : on peut créditer un autre jour de la semaine)
   const days = $('days');
   days.innerHTML = '';
   for (const d of w.days) {
-    const el = document.createElement('div');
-    el.className = 'day' + (d.date === today ? ' day--today' : '') + (d.date > today ? ' day--future' : '');
+    const el = document.createElement('button');
+    el.type = 'button';
+    el.className = 'day'
+      + (d.date === today ? ' day--today' : '')
+      + (d.date > today ? ' day--future' : '')
+      + (d.date === SELECTED_DATE ? ' day--selected' : '');
     const name = dayShort.format(asDate(d.date)).replace('.', '');
     el.innerHTML = `<p class="day__name">${name}</p><p class="day__count">${nf.format(d.total)}</p>`;
+    el.addEventListener('click', () => {
+      SELECTED_DATE = d.date;
+      render();
+    });
     days.appendChild(el);
   }
+  updateEntryButton();
 
   // Historique
   $('allTime').textContent = nf.format(STATE.allTimeTotal);
@@ -122,6 +138,18 @@ function render() {
   }
 }
 
+// Libellé du bouton selon le jour visé.
+function updateEntryButton() {
+  const btn = $('entrySubmit');
+  if (SELECTED_DATE === localToday()) {
+    btn.textContent = 'Ajouter à aujourd\'hui';
+  } else {
+    const name = new Intl.DateTimeFormat('fr-FR', { weekday: 'long', timeZone: 'UTC' })
+      .format(asDate(SELECTED_DATE));
+    btn.textContent = 'Ajouter à ' + name;
+  }
+}
+
 function flash(msg) {
   const el = $('entryMsg');
   el.textContent = msg;
@@ -137,7 +165,7 @@ $('entryForm').addEventListener('submit', async (e) => {
   if (!Number.isInteger(n) || n < 1) { flash('Entrez un nombre valide.'); return; }
   const { status } = await api('/api/entries', {
     method: 'POST',
-    body: JSON.stringify({ date: localToday(), amount: n }),
+    body: JSON.stringify({ date: SELECTED_DATE || localToday(), amount: n }),
   });
   if (status === 401) return showLogin();
   if (status === 200) {
@@ -150,13 +178,14 @@ $('entryForm').addEventListener('submit', async (e) => {
 });
 
 $('btnUndo').addEventListener('click', async () => {
-  const { status, data } = await api('/api/entries/last?date=' + localToday(), { method: 'DELETE' });
+  const target = SELECTED_DATE || localToday();
+  const { status, data } = await api('/api/entries/last?date=' + target, { method: 'DELETE' });
   if (status === 401) return showLogin();
   if (status === 200) {
     flash('Dernière saisie annulée (' + nf.format(data.removed) + ').');
     await loadState();
   } else if (status === 404) {
-    flash('Rien à annuler aujourd\'hui.');
+    flash('Rien à annuler ce jour-là.');
   }
 });
 
