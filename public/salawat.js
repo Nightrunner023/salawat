@@ -42,13 +42,13 @@ window.SALAWAT = [
     ar: 'اللَّهُمَّ صَلِّ عَلَى رُوحِ سَيِّدِنَا مُحَمَّدٍ فِي الْأَرْوَاحِ وَعَلَى جَسَدِهِ فِي الْأَجْسَادِ وَعَلَى قَبْرِهِ فِي الْقُبُور',
     tr: 'Allāhumma ṣalli ʿalā rūḥi Sayyidinā Muḥammadin fī-l-arwāḥ, wa ʿalā jasadihi fī-l-ajsād, wa ʿalā qabrihi fī-l-qubūr.',
     fr: "Ô Allah, prie sur l'esprit de notre maître Muḥammad parmi les esprits, sur son corps parmi les corps, et sur sa tombe parmi les tombes.",
-    virtue: "L'Imām al-Shaʿrānī en rapporte une grande vertu liée à la vision du Prophète ﷺ et à son intercession.",
+    virtue: "L'Imām al-Shaʿrānī en rapporte une grande vertu liée à la vision du Prophète ﷺ et à son intercession. La chaîne de ce mérite mérite d'être vérifiée auprès des sources.",
   },
   {
     title: 'Ṣalāt al-Imām al-Ghazālī',
     ar: 'اللَّهُمَّ صَلِّ عَلَىٰ مُحَمَّدٍ عَبْدِكَ وَنَبِيِّكَ النَّبِيِّ الْأُمِّيِّ وَعَلَىٰ آلِهِ وَصَحْبِهِ وَسَلِّمْ',
     tr: 'Allāhumma ṣalli ʿalā Muḥammadin ʿabdika wa nabiyyika-n-nabiyyi-l-ummiyy, wa ʿalā ālihi wa ṣaḥbihi wa sallim.',
-    fr: "Ô Allah, prie sur Muḥammad, Ton serviteur et Ton prophète, le prophète illettré, ainsi que sur sa famille et ses compagnons, et salue-le.",
+    fr: "Ô Allah, prie sur Muḥammad, Ton serviteur et Ton prophète, le prophète ummī, ainsi que sur sa famille et ses compagnons, et salue-le.",
     virtue: "L'Imām al-Ghazālī rapporte dans l'Iḥyāʾ un mérite lié aux prières sur le Prophète ﷺ le vendredi, chaque récitation de cette formule comptant pour une prière.",
   },
   {
@@ -56,6 +56,6 @@ window.SALAWAT = [
     ar: 'اللَّهُمَّ صَلِّ عَلَىٰ مُحَمَّدٍ وَعَلَىٰ آلِ مُحَمَّدٍ كَمَا صَلَّيْتَ عَلَىٰ إِبْرَاهِيمَ وَعَلَىٰ آلِ إِبْرَاهِيمَ إِنَّكَ حَمِيدٌ مَجِيدٌ اللَّهُمَّ بَارِكْ عَلَىٰ مُحَمَّدٍ وَعَلَىٰ آلِ مُحَمَّدٍ كَمَا بَارَكْتَ عَلَىٰ إِبْرَاهِيمَ وَعَلَىٰ آلِ إِبْرَاهِيمَ إِنَّكَ حَمِيدٌ مَجِيدٌ',
     tr: 'Allāhumma ṣalli ʿalā Muḥammadin wa ʿalā āli Muḥammad, kamā ṣallayta ʿalā Ibrāhīma wa ʿalā āli Ibrāhīm, innaka Ḥamīdun Majīd. Allāhumma bārik ʿalā Muḥammadin wa ʿalā āli Muḥammad, kamā bārakta ʿalā Ibrāhīma wa ʿalā āli Ibrāhīm, innaka Ḥamīdun Majīd.',
     fr: "Ô Allah, prie sur Muḥammad et sur la famille de Muḥammad comme Tu as prié sur Ibrāhīm et sur la famille d'Ibrāhīm : Tu es certes Digne de louange, Glorieux. Ô Allah, bénis Muḥammad et la famille de Muḥammad comme Tu as béni Ibrāhīm et la famille d'Ibrāhīm : Tu es certes Digne de louange, Glorieux.",
-    virtue: "C'est la ṣalāt du tashahhud, transmise dans les recueils authentiques. Le Shaykh mālikite Aḥmad al-Ṣāwī lui rattache un mérite d'intercession.",
+    virtue: "C'est la ṣalāt du tashahhud, transmise dans les recueils authentiques. Le Shaykh mālikite Aḥmad al-Ṣāwī lui rattache un mérite d'intercession ; sa chaîne précise est à vérifier avant de l'affirmer.",
   },
 ];
