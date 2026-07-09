@@ -262,3 +262,115 @@ body {
   background: rgba(226, 192, 96, 0.12);
 }
 .day--selected .day__name { color: var(--gold-soft); }
+
+/* boutons de saisie rapide */
+.quick { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.quick__btn {
+  flex: 1 1 auto;
+  min-width: 64px;
+  padding: 10px 8px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--faint);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 15px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, transform 0.1s ease;
+}
+.quick__btn:hover { border-color: rgba(226, 192, 96, 0.5); }
+.quick__btn:active { transform: scale(0.96); }
+
+/* barre d'objectif du jour */
+.goal { margin-top: 14px; }
+.goal__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+.goal__label { font-size: 13.5px; color: var(--muted); }
+.goal__count { font-family: var(--mono); font-size: 13.5px; color: var(--ink); font-variant-numeric: tabular-nums; }
+.goal__bar { height: 8px; border-radius: 999px; background: rgba(0, 0, 0, 0.3); overflow: hidden; }
+.goal__fill {
+  height: 100%;
+  width: 0;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(226, 192, 96, 0.7), var(--gold-soft));
+  transition: width 0.3s ease;
+}
+.goal__fill--met { background: linear-gradient(90deg, var(--gold), var(--gold-soft)); }
+
+/* mini-barre de progression sur chaque case-jour */
+.day__bar { height: 3px; border-radius: 999px; background: rgba(0, 0, 0, 0.28); overflow: hidden; margin-top: 6px; }
+.day__fill { height: 100%; width: 0; background: var(--gold-soft); border-radius: 999px; }
+.day--met { border-color: rgba(226, 192, 96, 0.45); }
+.day--met .day__count { color: var(--gold-soft); }
+
+/* champ numérique de réglage */
+.settings__num {
+  width: 96px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.25);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 14.5px;
+  text-align: right;
+}
+.settings__row + .settings__row { margin-top: 12px; }
+
+/* ===== Ṣalāt du jour ===================================================== */
+.salat {
+  margin-bottom: 20px;
+  padding: 18px 18px 14px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background:
+    radial-gradient(120% 100% at 50% 0%, rgba(226, 192, 96, 0.07), transparent 70%),
+    var(--faint);
+}
+.salat__eyebrow {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.salat__title {
+  margin: 4px 0 12px;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 20px;
+  color: var(--gold-soft);
+}
+.salat__ar {
+  margin: 0;
+  font-family: "Amiri", serif;
+  font-size: 23px;
+  line-height: 2;
+  text-align: right;
+}
+.salat__tr {
+  margin: 12px 0 0;
+  font-style: italic;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--ink);
+  opacity: 0.92;
+}
+.salat__more { margin-top: 12px; }
+.salat__more summary {
+  cursor: pointer;
+  font-size: 13.5px;
+  color: var(--muted);
+  list-style: none;
+}
+.salat__more summary::-webkit-details-marker { display: none; }
+.salat__more summary::before { content: "▸ "; color: var(--gold-soft); }
+.salat__more[open] summary::before { content: "▾ "; }
+.salat__fr { margin: 10px 0 0; font-size: 14.5px; line-height: 1.6; }
+.salat__virtue { margin: 10px 0 0; font-size: 13px; line-height: 1.55; color: var(--muted); }

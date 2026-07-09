@@ -15,7 +15,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Manrope:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Manrope:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/style.css" />
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
@@ -46,6 +46,19 @@
       <button class="linkbtn" id="btnLogout" type="button">Se déconnecter</button>
     </header>
 
+    <!-- Ṣalāt du jour -->
+    <section class="salat" aria-label="Ṣalāt du jour">
+      <p class="salat__eyebrow">Ṣalāt du jour</p>
+      <h2 class="salat__title" id="salatTitle"></h2>
+      <p class="salat__ar" id="salatAr" dir="rtl" lang="ar"></p>
+      <p class="salat__tr" id="salatTr"></p>
+      <details class="salat__more">
+        <summary>Traduction et vertu</summary>
+        <p class="salat__fr" id="salatFr"></p>
+        <p class="salat__virtue" id="salatVirtue"></p>
+      </details>
+    </section>
+
     <!-- Total de la semaine -->
     <section class="total" aria-live="polite">
       <p class="total__label">Cette semaine</p>
@@ -55,8 +68,23 @@
     <!-- Les 7 jours -->
     <section class="days" id="days" aria-label="Jours de la semaine"></section>
 
+    <!-- Objectif du jour -->
+    <section class="goal" aria-live="polite">
+      <div class="goal__head">
+        <span class="goal__label" id="goalLabel">Objectif du jour</span>
+        <span class="goal__count" id="goalCount">0 / 300</span>
+      </div>
+      <div class="goal__bar"><div class="goal__fill" id="goalFill"></div></div>
+    </section>
+
     <!-- Saisie -->
     <section class="entry">
+      <div class="quick" id="quick">
+        <button type="button" class="quick__btn" data-n="33">+33</button>
+        <button type="button" class="quick__btn" data-n="100">+100</button>
+        <button type="button" class="quick__btn" data-n="300">+300</button>
+        <button type="button" class="quick__btn" data-n="500">+500</button>
+      </div>
       <form class="entry__form" id="entryForm">
         <input class="entry__input" id="entryAmount" type="number" inputmode="numeric"
                min="1" step="1" placeholder="Nombre de ṣalawāt" autocomplete="off" />
@@ -96,6 +124,10 @@
           <option value="4">jeudi</option>
         </select>
       </label>
+      <label class="settings__row">
+        <span>Objectif quotidien</span>
+        <input class="settings__num" id="dailyGoalInput" type="number" min="1" step="1" inputmode="numeric" />
+      </label>
     </section>
 
     <footer class="foot">
@@ -103,6 +135,7 @@
     </footer>
   </main>
 
+  <script src="/salawat.js"></script>
   <script src="/app.js"></script>
 </body>
 </html>

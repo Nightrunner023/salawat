@@ -83,6 +83,7 @@ async function loadState() {
 function render() {
   $('loginView').hidden = true;
   $('appView').hidden = false;
+  renderSalatOfDay();
 
   const w = STATE.week;
   $('userName').textContent = STATE.user.name ? 'As-salāmu ʿalaykum, ' + STATE.user.name : '';
@@ -97,24 +98,29 @@ function render() {
   if (!SELECTED_DATE || !inWeek) SELECTED_DATE = today;
 
   // Jours (cliquables : on peut créditer un autre jour de la semaine)
+  const goal = STATE.user.dailyGoal || 300;
   const days = $('days');
   days.innerHTML = '';
   for (const d of w.days) {
+    const pct = Math.min(100, Math.round((d.total / goal) * 100));
+    const met = d.total >= goal;
     const el = document.createElement('button');
     el.type = 'button';
     el.className = 'day'
       + (d.date === today ? ' day--today' : '')
       + (d.date > today ? ' day--future' : '')
-      + (d.date === SELECTED_DATE ? ' day--selected' : '');
+      + (d.date === SELECTED_DATE ? ' day--selected' : '')
+      + (met ? ' day--met' : '');
     const name = dayShort.format(asDate(d.date)).replace('.', '');
-    el.innerHTML = `<p class="day__name">${name}</p><p class="day__count">${nf.format(d.total)}</p>`;
-    el.addEventListener('click', () => {
-      SELECTED_DATE = d.date;
-      render();
-    });
+    el.innerHTML =
+      `<p class="day__name">${name}</p>` +
+      `<p class="day__count">${nf.format(d.total)}</p>` +
+      `<div class="day__bar"><div class="day__fill" style="width:${pct}%"></div></div>`;
+    el.addEventListener('click', () => { SELECTED_DATE = d.date; render(); });
     days.appendChild(el);
   }
   updateEntryButton();
+  updateGoalBox();
 
   // Historique
   $('allTime').textContent = nf.format(STATE.allTimeTotal);
@@ -132,10 +138,25 @@ function render() {
 
   // Réglage
   $('weekStartSelect').value = String(STATE.user.weekStart);
+  $('dailyGoalInput').value = String(STATE.user.dailyGoal || 300);
 
   if (STATE.archivedNow > 0) {
     flash('Semaine(s) passée(s) enregistrée(s) dans l\'historique.');
   }
+}
+
+// Ṣalāt du jour : rotation déterministe sur le quantième de l'année.
+function renderSalatOfDay() {
+  const list = window.SALAWAT || [];
+  if (!list.length) return;
+  const now = new Date();
+  const doy = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
+  const s = list[doy % list.length];
+  $('salatTitle').textContent = s.title;
+  $('salatAr').textContent = s.ar;
+  $('salatTr').textContent = s.tr;
+  $('salatFr').textContent = s.fr;
+  $('salatVirtue').textContent = s.virtue;
 }
 
 // Libellé du bouton selon le jour visé.
@@ -150,6 +171,22 @@ function updateEntryButton() {
   }
 }
 
+// Barre d'objectif du jour sélectionné.
+function updateGoalBox() {
+  const goal = STATE.user.dailyGoal || 300;
+  const day = STATE.week.days.find((d) => d.date === SELECTED_DATE);
+  const total = day ? day.total : 0;
+  const pct = Math.min(100, Math.round((total / goal) * 100));
+  const isToday = SELECTED_DATE === localToday();
+  const name = new Intl.DateTimeFormat('fr-FR', { weekday: 'long', timeZone: 'UTC' })
+    .format(asDate(SELECTED_DATE));
+  $('goalLabel').textContent = 'Objectif du jour · ' + (isToday ? "aujourd'hui" : name);
+  $('goalCount').textContent = nf.format(total) + ' / ' + nf.format(goal);
+  const fill = $('goalFill');
+  fill.style.width = pct + '%';
+  fill.classList.toggle('goal__fill--met', total >= goal);
+}
+
 function flash(msg) {
   const el = $('entryMsg');
   el.textContent = msg;
@@ -158,10 +195,7 @@ function flash(msg) {
 }
 
 // --- Actions -------------------------------------------------------------------
-$('entryForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const input = $('entryAmount');
-  const n = parseInt(input.value, 10);
+async function addAmount(n) {
   if (!Number.isInteger(n) || n < 1) { flash('Entrez un nombre valide.'); return; }
   const { status } = await api('/api/entries', {
     method: 'POST',
@@ -169,12 +203,25 @@ $('entryForm').addEventListener('submit', async (e) => {
   });
   if (status === 401) return showLogin();
   if (status === 200) {
-    input.value = '';
     flash('+ ' + nf.format(n) + ' — qu\'Allah les accepte.');
     await loadState();
   } else {
     flash('Erreur, réessayez.');
   }
+}
+
+$('entryForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const input = $('entryAmount');
+  const n = parseInt(input.value, 10);
+  if (!Number.isInteger(n) || n < 1) { flash('Entrez un nombre valide.'); return; }
+  input.value = '';
+  await addAmount(n);
+});
+
+$('quick').addEventListener('click', (e) => {
+  const btn = e.target.closest('.quick__btn');
+  if (btn) addAmount(parseInt(btn.dataset.n, 10));
 });
 
 $('btnUndo').addEventListener('click', async () => {
@@ -211,6 +258,17 @@ $('weekStartSelect').addEventListener('change', async (e) => {
   const { status } = await api('/api/settings', {
     method: 'POST',
     body: JSON.stringify({ week_start: Number(e.target.value) }),
+  });
+  if (status === 401) return showLogin();
+  await loadState();
+});
+
+$('dailyGoalInput').addEventListener('change', async (e) => {
+  const g = parseInt(e.target.value, 10);
+  if (!Number.isInteger(g) || g < 1) { flash('Objectif invalide.'); await loadState(); return; }
+  const { status } = await api('/api/settings', {
+    method: 'POST',
+    body: JSON.stringify({ daily_goal: g }),
   });
   if (status === 401) return showLogin();
   await loadState();

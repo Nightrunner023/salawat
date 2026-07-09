@@ -65,6 +65,11 @@ CREATE TABLE IF NOT EXISTS weeks (
 CREATE INDEX IF NOT EXISTS idx_weeks_user ON weeks(user_id, start_date);
 `);
 
+// Migration : ajoute daily_goal si la base existait déjà sans cette colonne.
+try {
+  db.exec('ALTER TABLE users ADD COLUMN daily_goal INTEGER NOT NULL DEFAULT 300');
+} catch (e) { /* colonne déjà présente */ }
+
 // --- Outils de dates (tout en AAAA-MM-JJ, ancré à midi UTC) ------------------
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 function isValidDate(s) {
@@ -95,14 +100,14 @@ function auth(req, res, next) {
   const token = req.cookies.session;
   if (!token) return res.status(401).json({ ok: false, error: 'auth' });
   const row = db.prepare(
-    `SELECT s.expires_at, u.id AS uid, u.name, u.email, u.week_start
+    `SELECT s.expires_at, u.id AS uid, u.name, u.email, u.week_start, u.daily_goal
      FROM sessions s JOIN users u ON u.id = s.user_id WHERE s.token = ?`
   ).get(token);
   if (!row || row.expires_at < new Date().toISOString()) {
     if (row) db.prepare('DELETE FROM sessions WHERE token = ?').run(token);
     return res.status(401).json({ ok: false, error: 'auth' });
   }
-  req.user = { id: row.uid, name: row.name, email: row.email, week_start: row.week_start };
+  req.user = { id: row.uid, name: row.name, email: row.email, week_start: row.week_start, daily_goal: row.daily_goal };
   next();
 }
 
@@ -207,7 +212,7 @@ app.get('/api/state', auth, (req, res) => {
 
   res.json({
     ok: true,
-    user: { name: req.user.name, weekStart: req.user.week_start },
+    user: { name: req.user.name, weekStart: req.user.week_start, dailyGoal: req.user.daily_goal },
     week: { start: ws, end: addDaysISO(ws, 6), days, total: weekTotal },
     history,
     allTimeTotal: archivedTotal + weekTotal,
@@ -256,11 +261,24 @@ app.post('/api/week/close', auth, (req, res) => {
   res.json({ ok: true, total });
 });
 
-// Réglage : jour de début de semaine (0=dimanche ... 6=samedi).
+// Réglages : jour de début de semaine (0..6) et/ou objectif quotidien.
 app.post('/api/settings', auth, (req, res) => {
-  const n = Number((req.body || {}).week_start);
-  if (!Number.isInteger(n) || n < 0 || n > 6) return res.status(400).json({ ok: false, error: 'week_start' });
-  db.prepare('UPDATE users SET week_start = ? WHERE id = ?').run(n, req.user.id);
+  const body = req.body || {};
+  const updates = [];
+  const params = [];
+  if (body.week_start !== undefined) {
+    const n = Number(body.week_start);
+    if (!Number.isInteger(n) || n < 0 || n > 6) return res.status(400).json({ ok: false, error: 'week_start' });
+    updates.push('week_start = ?'); params.push(n);
+  }
+  if (body.daily_goal !== undefined) {
+    const g = Number(body.daily_goal);
+    if (!Number.isInteger(g) || g < 1 || g > 1000000) return res.status(400).json({ ok: false, error: 'daily_goal' });
+    updates.push('daily_goal = ?'); params.push(g);
+  }
+  if (!updates.length) return res.status(400).json({ ok: false, error: 'empty' });
+  params.push(req.user.id);
+  db.prepare(`UPDATE users SET ${updates.join(', ')} WHERE id = ?`).run(...params);
   res.json({ ok: true });
 });
 
